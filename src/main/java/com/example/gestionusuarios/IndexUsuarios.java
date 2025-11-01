@@ -21,9 +21,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class IndexUsuariosController implements Initializable {
+public class IndexUsuarios implements Initializable {
     @FXML
     private TextField buscador;
     @FXML
@@ -103,9 +104,15 @@ public class IndexUsuariosController implements Initializable {
                     private final Button btnEditar = new Button("Editar");
                     private final Button btnCambiar = new Button("Cambiar estado");
                     private final Button btnVer = new Button("Ver");
+
                     {
                         botonesContainer.getChildren().addAll(btnEditar, btnCambiar, btnVer);
+                        //Agregar eventos a los botones
+                        btnEditar.setOnAction(event -> abrirEditarUsuario());
+                        btnVer.setOnAction(event -> abrirVerUsuario());
+                        btnCambiar.setOnAction(event -> cambiarEstadoUsuario());
                     }
+
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -118,6 +125,100 @@ public class IndexUsuariosController implements Initializable {
                 };
             }
         });
+    }
+
+    private void abrirEditarUsuario() {
+        try {
+            Usuario usuarioSeleccionado = tablaUsuario.getSelectionModel().getSelectedItem();
+            if (usuarioSeleccionado != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("EditarUsuario.fxml"));
+                Parent root = loader.load();
+
+                //Pasar el usuario al controlador de edición
+                EditarUsuarios controller = loader.getController();
+                controller.setUsuario(usuarioSeleccionado);
+
+                Stage stage = new Stage();
+                stage.setTitle("Editar Usuario");
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+
+                // Recargar datos después de cerrar la ventana de edición
+                recargarDatos();
+            } else {
+                mostrarAlerta("Error", "Selecciona un usuario para editar", Alert.AlertType.WARNING);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la ventana de edición", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void abrirVerUsuario() {
+        try {
+            Usuario usuarioSeleccionado = tablaUsuario.getSelectionModel().getSelectedItem();
+            if (usuarioSeleccionado != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("VerUsuarios.fxml"));
+                Parent root = loader.load();
+
+                //Pasar el usuario al controlador de ver
+                VerUsuarios controller = loader.getController();
+                controller.setUsuario(usuarioSeleccionado);
+
+                Stage stage = new Stage();
+                stage.setTitle("Ver Usuario");
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+            } else {
+                mostrarAlerta("Error", "Selecciona un usuario para ver", Alert.AlertType.WARNING);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la ventana de visualización", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void cambiarEstadoUsuario() {
+        Usuario usuarioSeleccionado = tablaUsuario.getSelectionModel().getSelectedItem();
+        if (usuarioSeleccionado != null) {
+            String nuevoEstado = usuarioSeleccionado.getEstado() ? "inactivo" : "activo";
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Cambiar Estado");
+            confirmacion.setHeaderText("¿Estás seguro?");
+            confirmacion.setContentText("El usuario cambiará a estado: " + nuevoEstado);
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
+            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                //Cambiar el estado
+                usuarioSeleccionado.setEstado(!usuarioSeleccionado.getEstado());
+                //Actualizar en la base de datos
+                UsuarioDao dao = new UsuarioDao();
+                if (dao.updateUsuario(usuarioSeleccionado)) {
+                    recargarDatos();
+                    mostrarAlerta("Éxito", "Estado cambiado correctamente", Alert.AlertType.INFORMATION);
+                } else {
+                    mostrarAlerta("Error", "No se pudo cambiar el estado", Alert.AlertType.ERROR);
+                }
+            }
+        } else {
+            mostrarAlerta("Error", "Selecciona un usuario para cambiar estado", Alert.AlertType.WARNING);
+        }
+    }
+
+    private void recargarDatos() {
+        UsuarioDao dao = new UsuarioDao();
+        List<Usuario> datos = dao.readUsuarios();
+        ObservableList<Usuario> datosObservables = FXCollections.observableArrayList(datos);
+        tablaUsuario.setItems(datosObservables);
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML

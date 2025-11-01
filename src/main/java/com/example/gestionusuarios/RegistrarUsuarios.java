@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class RegistrarUsuariosController {
+public class RegistrarUsuarios {
     @FXML
     private TextField nombreCompleto;
     @FXML

@@ -51,7 +51,7 @@ public class UsuarioDao {
 
     //Funcion de lectura (R) del CRUD
     public List<Usuario> readUsuarios(){
-        String query = "SELECT NOMBRE, CORREO, FECHANACIMIENTO, ESTADO FROM USUARIOS ORDER BY NOMBRE ASC";
+        String query = "SELECT IDUSUARIO, NOMBRE, CORREO, FECHANACIMIENTO, CONTRASENIA, ESTADO FROM USUARIOS ORDER BY NOMBRE ASC";
         List<Usuario> lista = new ArrayList<>();
         try{
             Connection conn = getConnection();
@@ -59,13 +59,13 @@ public class UsuarioDao {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Usuario u = new Usuario();
+                u.setIdUsuario(rs.getInt("IDUSUARIO"));
                 u.setNombre(rs.getString("NOMBRE"));
                 u.setCorreo(rs.getString("CORREO"));
                 u.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-                //Convertir NUMBER(1) a Boolean
+                u.setContrasenia(rs.getString("CONTRASENIA"));
                 int estadoNum = rs.getInt("ESTADO");
-                u.setEstado(estadoNum == 1); //1 = true, 0 = false
-
+                u.setEstado(estadoNum == 1);
                 lista.add(u);
             }
             rs.close();
@@ -77,9 +77,7 @@ public class UsuarioDao {
     }
 
     //Funcion de actualizar (U) del CRUD
-    public boolean updateUsuario(int IdUsuario, Usuario u){
-        //Obtener la conexion
-        //Preparar el sql statement
+    public boolean updateUsuario(Usuario u){
         String query = "UPDATE USUARIOS SET NOMBRE=?, CORREO=?, FECHANACIMIENTO=?, CONTRASENIA=?, ESTADO=? WHERE IDUSUARIO=?";
         try{
             Connection conn = getConnection();
@@ -88,18 +86,15 @@ public class UsuarioDao {
             ps.setString(2, u.getCorreo());
             ps.setDate(3, u.getFechaNacimiento());
             ps.setString(4, u.getContrasenia());
-            ps.setBoolean(5, u.getEstado());
-            ps.setInt(6, u.getIdUsuario()); //Este es el WHERE IDUSUARIO = ?
+            ps.setInt(5, u.getEstado() ? 1 : 0);
+            ps.setInt(6, u.getIdUsuario());
             int resultado = ps.executeUpdate();
-            if (resultado > 0) {
-                conn.close();
-                return true;
-            }
-        }catch(SQLException e){
+            conn.close();
+            return resultado > 0;
+        } catch(SQLException e){
             e.printStackTrace();
             return false;
         }
-        return false;
     }
 
     //Funcion de eliminar (D) del CRUD
