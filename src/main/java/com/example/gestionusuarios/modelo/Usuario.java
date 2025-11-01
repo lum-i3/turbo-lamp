@@ -11,8 +11,19 @@ public class Usuario {
     private Boolean estado;
     //Constructores
     public Usuario() {}
+
+    //Con true por defecto
+    public Usuario(String nombre, String correo, Date fechaNacimiento, String contrasenia) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.fechaNacimiento = fechaNacimiento;
+        this.contrasenia = contrasenia;
+        this.estado = true; // Estado activo por defecto
+    }
+
+    //Constructor para cuando ya conoces el ID
     public Usuario(int idUsuario, String nombre, String correo, Date fechaNacimiento, String contrasenia, Boolean estado) {
-        IdUsuario = idUsuario;
+        this.IdUsuario = idUsuario;
         this.nombre = nombre;
         this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;

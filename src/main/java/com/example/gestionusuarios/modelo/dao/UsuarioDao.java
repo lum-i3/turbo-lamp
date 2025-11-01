@@ -10,10 +10,26 @@ import java.util.List;
 import static com.example.gestionusuarios.utils.OracleDatabaseConnectionManager.getConnection;
 
 public class UsuarioDao {
-    //Funcion de crear usuarios (C) del CRUD
-    public boolean createUsuario(Usuario u){
-        //Obtener la conexion
-        //Preparar el statement
+    //Metodo para obtener el próximo ID
+    public int obtenerProximoId() {
+        String query = "SELECT NVL(MAX(IDUSUARIO), 0) + 1 AS NEXT_ID FROM USUARIOS";
+        try {
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("NEXT_ID");
+            }
+            rs.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1; //Si hay error, retorna 1 como valor por defecto
+    }
+
+    //Funcion de crear (C) del CRUD
+    public boolean createUsuario(Usuario u) {
         String query = "INSERT INTO USUARIOS (IDUSUARIO, NOMBRE, CORREO, FECHANACIMIENTO, CONTRASENIA, ESTADO) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             Connection conn = getConnection();
@@ -23,20 +39,17 @@ public class UsuarioDao {
             ps.setString(3, u.getCorreo());
             ps.setDate(4, u.getFechaNacimiento());
             ps.setString(5, u.getContrasenia());
-            ps.setBoolean(6, u.getEstado());
+            ps.setInt(6, u.getEstado() ? 1 : 0); // Convertir Boolean a NUMBER
             int resultado = ps.executeUpdate();
-            if (resultado > 0) {
-                conn.close();
-                return true;
-            }
-        }catch(SQLException e){
+            conn.close();
+            return resultado > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-        return false;
     }
 
-    //Funcion de Lectura (R) del CRUD
+    //Funcion de lectura (R) del CRUD
     public List<Usuario> readUsuarios(){
         String query = "SELECT NOMBRE, CORREO, FECHANACIMIENTO, ESTADO FROM USUARIOS ORDER BY NOMBRE ASC";
         List<Usuario> lista = new ArrayList<>();
@@ -49,7 +62,10 @@ public class UsuarioDao {
                 u.setNombre(rs.getString("NOMBRE"));
                 u.setCorreo(rs.getString("CORREO"));
                 u.setFechaNacimiento(rs.getDate("FECHANACIMIENTO"));
-                u.setEstado(rs.getBoolean("ESTADO"));
+                //Convertir NUMBER(1) a Boolean
+                int estadoNum = rs.getInt("ESTADO");
+                u.setEstado(estadoNum == 1); //1 = true, 0 = false
+
                 lista.add(u);
             }
             rs.close();

@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="779.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+<AnchorPane prefHeight="779.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestionusuarios.RegistrarUsuariosController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="501.0" layoutX="527.0" layoutY="139.0" stroke="BLACK" strokeType="INSIDE" width="430.0" />
-      <Circle fill="DODGERBLUE" layoutX="746.0" layoutY="185.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="541.0" layoutX="527.0" layoutY="139.0" stroke="BLACK" strokeType="INSIDE" width="430.0" />
+      <Circle fill="DODGERBLUE" layoutX="736.0" layoutY="185.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
       <Text layoutX="693.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Agregar Usuario" />
-      <Text layoutX="652.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingresa los datos del usuario" />
-      <TextField layoutX="542.0" layoutY="314.0" prefHeight="30.0" prefWidth="400.0" />
+      <Text layoutX="670.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingresa los datos del usuario" />
+      <TextField fx:id="nombreCompleto" layoutX="542.0" layoutY="314.0" prefHeight="30.0" prefWidth="400.0" promptText="Ingrese nombre" />
       <Text layoutX="544.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre completo *" />
       <Text layoutX="544.0" layoutY="378.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Correo electronico *" />
-      <TextField layoutX="543.0" layoutY="390.0" prefHeight="30.0" prefWidth="400.0" />
-      <PasswordField layoutX="542.0" layoutY="466.0" prefHeight="30.0" prefWidth="400.0" />
-      <Text layoutX="543.0" layoutY="460.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contraseña *" />
-      <PasswordField layoutX="543.0" layoutY="542.0" prefHeight="30.0" prefWidth="400.0" />
-      <Text layoutX="545.0" layoutY="537.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirmar contraseña *" />
-      <Text layoutX="544.0" layoutY="509.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimo 8 caracteres, debe incluir mayúsculas, minúsculas y un número">
+      <TextField fx:id="correo" layoutX="543.0" layoutY="390.0" prefHeight="30.0" prefWidth="400.0" promptText="Ingrese correo" />
+      <PasswordField fx:id="contrasenia" layoutX="543.0" layoutY="499.0" prefHeight="30.0" prefWidth="400.0" promptText="Ingrese contrasenia" />
+      <Text layoutX="544.0" layoutY="493.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contraseña *" />
+      <PasswordField fx:id="confirmarContrasenia" layoutX="544.0" layoutY="575.0" prefHeight="30.0" prefWidth="400.0" promptText="Confirme contrasenia" />
+      <Text layoutX="546.0" layoutY="570.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirmar contraseña *" />
+      <Text layoutX="545.0" layoutY="542.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimo 8 caracteres, debe incluir mayúsculas, minúsculas y un número">
          <font>
             <Font size="9.0" />
          </font>
       </Text>
-      <Button layoutX="684.0" layoutY="593.0" mnemonicParsing="false" text="Agregar usuario" />
+      <Button layoutX="684.0" layoutY="629.0" mnemonicParsing="false" onAction="#agregarUsuario" text="Agregar usuario" />
+      <DatePicker fx:id="fechaNacimiento" layoutX="700.0" layoutY="440.0" prefHeight="31.0" prefWidth="242.0" promptText="Seleccione fecha de nacimiento" />
+      <Text layoutX="542.0" layoutY="461.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha de nacimiento *" />
+      <Button layoutX="1346.0" layoutY="724.0" mnemonicParsing="false" onAction="#regresarMenu" text="Regresar" />
    </children>
 </AnchorPane>
