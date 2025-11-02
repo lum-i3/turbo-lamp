@@ -263,10 +263,14 @@ public class IndexUsuarios implements Initializable {
             Optional<ButtonType> resultado = confirmacion.showAndWait();
             if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
                 //Cambiar el estado
-                usuarioSeleccionado.setEstado(!usuarioSeleccionado.getEstado());
+                Boolean nuevoEstadoBoolean = !usuarioSeleccionado.getEstado();
+                usuarioSeleccionado.setEstado(nuevoEstadoBoolean);
                 //Actualizar en la base de datos
                 UsuarioDao dao = new UsuarioDao();
                 if (dao.updateUsuario(usuarioSeleccionado)) {
+                    //Forzar recreacion de la lista
+                    ObservableList<Usuario> listaTemporal = FXCollections.observableArrayList(listaOriginal);
+                    listaOriginal.setAll(listaTemporal);
                     aplicarFiltros();
                     mostrarAlerta("Éxito", "Estado cambiado correctamente", Alert.AlertType.INFORMATION);
                 } else {
