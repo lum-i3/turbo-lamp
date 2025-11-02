@@ -4,6 +4,8 @@ import com.example.gestionusuarios.modelo.Usuario;
 import com.example.gestionusuarios.modelo.dao.UsuarioDao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +21,8 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -44,24 +48,91 @@ public class IndexUsuarios implements Initializable {
     @FXML
     private TableColumn<Usuario, String> tablaAcciones;
 
+    private ObservableList<Usuario> listaOriginal;
+    private FilteredList<Usuario> datosFiltrados;
+    private SortedList<Usuario> datosOrdenados;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Configurar filtros
         filtros.setItems(FXCollections.observableArrayList("Todos", "Activo", "Inactivo"));
         filtros.getSelectionModel().selectFirst();
         //Cargar datos
+        cargarDatos();
+        // Configurar filtros y búsqueda
+        configurarFiltrosYBusqueda();
+        //Configurar columnas
+        configurarColumnas();
+        configurarColumnaEstado();
+        configurarColumnaAcciones();
+    }
+
+    private void cargarDatos() {
         UsuarioDao dao = new UsuarioDao();
         List<Usuario> datos = dao.readUsuarios();
-        ObservableList<Usuario> datosObservables = FXCollections.observableArrayList(datos);
+        listaOriginal = FXCollections.observableArrayList(datos);
+        //Inicializar FilteredList con todos los datos
+        datosFiltrados = new FilteredList<>(listaOriginal, p -> true);
+        //Envolver FilteredList en SortedList
+        datosOrdenados = new SortedList<>(datosFiltrados);
+        //Vincular SortedList con la tabla
+        datosOrdenados.comparatorProperty().bind(tablaUsuario.comparatorProperty());
+        tablaUsuario.setItems(datosOrdenados);
+    }
+
+    private void configurarFiltrosYBusqueda() {
+        //Listener para el ChoiceBox
+        filtros.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, nuevoFiltro) -> aplicarFiltros()
+        );
+        //Listener para el TextField
+        buscador.textProperty().addListener((observable, oldValue, nuevoTexto) -> {
+            aplicarFiltros();
+        });
+    }
+
+    private void aplicarFiltros() {
+        datosFiltrados.setPredicate(usuario -> {
+            //Si no hay filtros, mostrar todos
+            if ((filtros.getValue() == null || filtros.getValue().equals("Todos")) &&
+                    (buscador.getText() == null || buscador.getText().isEmpty())) {
+                return true;
+            }
+            boolean coincideEstado = true;
+            boolean coincideBusqueda = true;
+            //Filtrar por estado
+            if (filtros.getValue() != null && !filtros.getValue().equals("Todos")) {
+                if (filtros.getValue().equals("Activo")) {
+                    coincideEstado = usuario.getEstado(); //true
+                } else if (filtros.getValue().equals("Inactivo")) {
+                    coincideEstado = !usuario.getEstado(); //false
+                }
+            }
+            //Filtrar por busqueda de texto
+            if (buscador.getText() != null && !buscador.getText().isEmpty()) {
+                String textoBusqueda = buscador.getText().toLowerCase();
+                //Convertir la fecha a String en formato dd/mm/yyyy
+                String fechaFormatoLocal = "";
+                if (usuario.getFechaNacimiento() != null) {
+                    LocalDate fechaLocal = usuario.getFechaNacimiento().toLocalDate();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    fechaFormatoLocal = fechaLocal.format(formatter).toLowerCase();
+                }
+                coincideBusqueda = usuario.getNombre().toLowerCase().contains(textoBusqueda) ||
+                        usuario.getCorreo().toLowerCase().contains(textoBusqueda) ||
+                        fechaFormatoLocal.contains(textoBusqueda);
+            }
+            return coincideEstado && coincideBusqueda;
+        });
+    }
+
+    private void configurarColumnas() {
         tablaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         tablaCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
         tablaFecha.setCellValueFactory(new PropertyValueFactory<>("fechaNacimiento"));
         tablaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        //Configurar columnas personalizadas
         configurarColumnaEstado();
         configurarColumnaAcciones();
-        //Pintar los datos
-        tablaUsuario.setItems(datosObservables);
     }
 
     private void configurarColumnaEstado() {
@@ -171,6 +242,7 @@ public class IndexUsuarios implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
+                recargarDatos();
             } else {
                 mostrarAlerta("Error", "Selecciona un usuario para ver", Alert.AlertType.WARNING);
             }
@@ -195,7 +267,7 @@ public class IndexUsuarios implements Initializable {
                 //Actualizar en la base de datos
                 UsuarioDao dao = new UsuarioDao();
                 if (dao.updateUsuario(usuarioSeleccionado)) {
-                    recargarDatos();
+                    aplicarFiltros();
                     mostrarAlerta("Éxito", "Estado cambiado correctamente", Alert.AlertType.INFORMATION);
                 } else {
                     mostrarAlerta("Error", "No se pudo cambiar el estado", Alert.AlertType.ERROR);
@@ -207,10 +279,29 @@ public class IndexUsuarios implements Initializable {
     }
 
     private void recargarDatos() {
-        UsuarioDao dao = new UsuarioDao();
-        List<Usuario> datos = dao.readUsuarios();
-        ObservableList<Usuario> datosObservables = FXCollections.observableArrayList(datos);
-        tablaUsuario.setItems(datosObservables);
+        try {
+            UsuarioDao dao = new UsuarioDao();
+            List<Usuario> nuevosDatos = dao.readUsuarios();
+            String filtroEstado = filtros.getValue();
+            String textoBusqueda = buscador.getText();
+            Usuario seleccionado = tablaUsuario.getSelectionModel().getSelectedItem();
+            int indiceSeleccionado = tablaUsuario.getSelectionModel().getSelectedIndex();
+            listaOriginal.clear();
+            listaOriginal.addAll(nuevosDatos);
+            aplicarFiltros();
+            if (seleccionado != null) {
+                Optional<Usuario> usuarioActualizado = listaOriginal.stream()
+                        .filter(u -> u.getIdUsuario() == seleccionado.getIdUsuario())
+                        .findFirst();
+                if (usuarioActualizado.isPresent()) {
+                    tablaUsuario.getSelectionModel().select(usuarioActualizado.get());
+                }
+            }
+            System.out.println("Datos recargados. Registros: " + listaOriginal.size());
+        } catch (Exception e) {
+            System.out.println("Error al recargar datos: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {

@@ -24,8 +24,9 @@
             <Font size="9.0" />
          </font>
       </Text>
-      <Button fx:id="editarUsuario" layoutX="692.0" layoutY="618.0" mnemonicParsing="false" text="Editar usuario" />
+      <Button fx:id="editarUsuario" layoutX="755.0" layoutY="618.0" mnemonicParsing="false" text="Editar usuario" />
       <DatePicker fx:id="fechaNacimiento" layoutX="702.0" layoutY="422.0" prefHeight="31.0" prefWidth="238.0" />
       <Text layoutX="543.0" layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha de nacimiento *" />
+      <Button fx:id="borrarUsuario" layoutX="631.0" layoutY="618.0" mnemonicParsing="false" text="Eliminar usuario" />
    </children>
 </AnchorPane>

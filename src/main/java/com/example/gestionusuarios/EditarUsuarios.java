@@ -4,15 +4,12 @@ import com.example.gestionusuarios.modelo.Usuario;
 import com.example.gestionusuarios.modelo.dao.UsuarioDao;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -30,16 +27,16 @@ public class EditarUsuarios implements Initializable {
     private PasswordField confirmarContrasenia;
     @FXML
     private Button editarUsuario;
+    @FXML
+    private Button borrarUsuario;
 
     private Usuario usuario;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Conectar el botón al método editarUsuario
+        //Conectar el botón al metodo editarUsuario
         editarUsuario.setOnAction(event -> editarUsuario());
-
-        // O también puedes hacerlo así:
-        // editarUsuario.setOnAction(this::editarUsuario);
+        borrarUsuario.setOnAction(event -> borrarUsuario());
     }
 
     public void setUsuario(Usuario usuario) {
@@ -148,6 +145,34 @@ public class EditarUsuarios implements Initializable {
             mostrarAlerta("Error", "Error al actualizar: " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }
+    }
+
+    private void borrarUsuario() {
+        if (confirmDelete()) {
+            try {
+                UsuarioDao dao = new UsuarioDao();
+                if (dao.deleteUsuario(usuario.getIdUsuario())) {
+                    mostrarAlerta("Éxito", "Usuario eliminado correctamente", Alert.AlertType.INFORMATION);
+                    Stage stage = (Stage) borrarUsuario.getScene().getWindow();
+                    stage.close();
+                } else {
+                    mostrarAlerta("Error", "No se pudo eliminar el usuario", Alert.AlertType.ERROR);
+                }
+            } catch (Exception e) {
+                mostrarAlerta("Error", "Error al eliminar: " + e.getMessage(), Alert.AlertType.ERROR);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean confirmDelete(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmación de Eliminación");
+        alert.setHeaderText("¿Estás seguro de eliminar este usuario?");
+        alert.setContentText("Esta acción no se puede deshacer. Se eliminarán todos los datos del usuario: " + usuario.getNombre());
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {

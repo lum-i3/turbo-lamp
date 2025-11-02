@@ -73,7 +73,7 @@ public class RegistrarUsuarios {
             mostrarAlerta("Error!", "La fecha de nacimiento no puede ser futura", Alert.AlertType.ERROR);
             return;
         }
-        // Validar que el usuario sea mayor de edad (18+ años)
+        //Validar que el usuario sea mayor de edad
         if (fechaNacimiento.getValue().plusYears(18).isAfter(LocalDate.now())) {
             mostrarAlerta("Error!", "El usuario debe ser mayor de edad (18+ años)", Alert.AlertType.ERROR);
             return;

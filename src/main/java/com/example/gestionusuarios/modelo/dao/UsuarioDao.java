@@ -97,20 +97,19 @@ public class UsuarioDao {
         }
     }
 
-    //Funcion de eliminar (D) del CRUD
+    // Función de eliminar (D) del CRUD - CORREGIDA
     public boolean deleteUsuario(int IdUsuario){
         String query = "DELETE FROM USUARIOS WHERE IDUSUARIO=?";
-        boolean seBorro = false;
         try{
             Connection conn = getConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, IdUsuario);
-            if(ps.executeUpdate()>0){
-                return true;
-            }
-        }catch(SQLException e){
+            int filasAfectadas = ps.executeUpdate();
+            conn.close();
+            return filasAfectadas > 0;
+        } catch(SQLException e){
             e.printStackTrace();
+            return false;
         }
-        return seBorro;
     }
 }
