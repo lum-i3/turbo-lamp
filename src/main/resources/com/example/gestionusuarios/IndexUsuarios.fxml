@@ -1,15 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="779.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestionusuarios.IndexUsuarios">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="779.0" prefWidth="1440.0" style="-fx-background-color: #F6EEFF;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestionusuarios.IndexUsuarios">
    <children>
+       <AnchorPane layoutX="745.0" layoutY="-3.0" prefHeight="351.0" prefWidth="455.0" rotate="-180.0">
+           <children>
+               <Arc layoutX="232.0" layoutY="322.0" length="270.0" radiusX="259.0" radiusY="259.0" startAngle="-45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" type="CHORD">
+                   <fill>
+                       <LinearGradient endX="1.0" endY="1.0">
+                           <stops>
+                               <Stop>
+                                   <color>
+                                       <Color red="0.4000000059604645" green="0.4941176474094391" blue="0.9176470637321472" />
+                                   </color>
+                               </Stop>
+                               <Stop offset="1.0">
+                                   <color>
+                                       <Color red="0.4627451002597809" green="0.29411765933036804" blue="0.6352941393852234" />
+                                   </color>
+                               </Stop>
+                           </stops>
+                       </LinearGradient>
+                   </fill>
+               </Arc>
+               <Arc layoutX="506.0" layoutY="382.0" length="270.0" radiusX="174.0" radiusY="174.0" startAngle="-45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" type="CHORD">
+                   <fill>
+                       <LinearGradient endX="1.0" endY="1.0">
+                           <stops>
+                               <Stop>
+                                   <color>
+                                       <Color red="0.4000000059604645" green="0.4941176474094391" blue="0.9176470637321472" />
+                                   </color>
+                               </Stop>
+                               <Stop offset="1.0">
+                                   <color>
+                                       <Color red="0.4627451002597809" green="0.29411765933036804" blue="0.6352941393852234" />
+                                   </color>
+                               </Stop>
+                           </stops>
+                       </LinearGradient>
+                   </fill>
+               </Arc>
+           </children>
+       </AnchorPane>
+       <AnchorPane layoutY="277.0" prefHeight="351.0" prefWidth="455.0">
+           <children>
+               <Arc layoutX="232.0" layoutY="322.0" length="270.0" radiusX="259.0" radiusY="259.0" startAngle="-45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" type="CHORD">
+                   <fill>
+                       <LinearGradient endX="1.0" endY="1.0">
+                           <stops>
+                               <Stop>
+                                   <color>
+                                       <Color red="0.4000000059604645" green="0.4941176474094391" blue="0.9176470637321472" />
+                                   </color>
+                               </Stop>
+                               <Stop offset="1.0">
+                                   <color>
+                                       <Color red="0.4627451002597809" green="0.29411765933036804" blue="0.6352941393852234" />
+                                   </color>
+                               </Stop>
+                           </stops>
+                       </LinearGradient>
+                   </fill>
+               </Arc>
+               <Arc layoutX="506.0" layoutY="382.0" length="270.0" radiusX="174.0" radiusY="174.0" startAngle="-45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" type="CHORD">
+                   <fill>
+                       <LinearGradient endX="1.0" endY="1.0">
+                           <stops>
+                               <Stop>
+                                   <color>
+                                       <Color red="0.4000000059604645" green="0.4941176474094391" blue="0.9176470637321472" />
+                                   </color>
+                               </Stop>
+                               <Stop offset="1.0">
+                                   <color>
+                                       <Color red="0.4627451002597809" green="0.29411765933036804" blue="0.6352941393852234" />
+                                   </color>
+                               </Stop>
+                           </stops>
+                       </LinearGradient>
+                   </fill>
+               </Arc>
+           </children>
+       </AnchorPane>
       <Pane layoutX="47.0" layoutY="51.0" prefHeight="679.0" prefWidth="1340.0">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="679.0" stroke="BLACK" strokeType="INSIDE" width="1340.0" />
+            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="679.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1340.0">
+               <effect>
+                  <DropShadow height="16.0" radius="7.5" width="16.0">
+                     <color>
+                        <Color opacity="0.5021551847457886" />
+                     </color>
+                  </DropShadow>
+               </effect></Rectangle>
             <Button fx:id="botonAgregar" layoutX="1200.0" layoutY="14.0" mnemonicParsing="false" onAction="#agregarUsuario" text="Agregar usuario" />
             <Circle fill="DODGERBLUE" layoutX="42.0" layoutY="40.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
             <Text layoutX="76.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Usuarios registados" />

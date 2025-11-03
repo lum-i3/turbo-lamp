@@ -98,16 +98,16 @@
                </color>
             </DropShadow>
          </effect></Rectangle>
-      <Circle fill="#667eea" layoutX="736.0" layoutY="185.0" radius="24.0" stroke="#4f62b5" strokeType="INSIDE" strokeWidth="0.0" />
-      <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="721.0" layoutY="170.0" pickOnBounds="true" preserveRatio="true">
+      <Circle fill="#667eea" layoutX="746.0" layoutY="185.0" radius="24.0" stroke="#4f62b5" strokeType="INSIDE" strokeWidth="0.0" />
+      <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="731.0" layoutY="170.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@img/add.png" />
          </image></ImageView>
-      <Text fill="#48266f" layoutX="659.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Agregar Usuario">
+      <Text fill="#48266f" layoutX="665.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Agregar Usuario">
          <font>
             <Font name="System Bold" size="20.0" />
          </font></Text>
-      <Text fill="#5d3885" layoutX="648.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingresa los datos del usuario">
+      <Text fill="#5d3885" layoutX="658.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingresa los datos del usuario">
          <font>
             <Font size="14.0" />
          </font></Text>
