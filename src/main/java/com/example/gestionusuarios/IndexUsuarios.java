@@ -172,9 +172,9 @@ public class IndexUsuarios implements Initializable {
             public TableCell<Usuario, String> call(TableColumn<Usuario, String> param) {
                 return new TableCell<Usuario, String>() {
                     private final HBox botonesContainer = new HBox(5);
-                    private final Button btnEditar = new Button("[🔁]");
-                    private final Button btnCambiar = new Button("[✏️]");
-                    private final Button btnVer = new Button("[👁️]");
+                    private final Button btnEditar = new Button("✏");
+                    private final Button btnCambiar = new Button("🔁");
+                    private final Button btnVer = new Button("[👁]");
 
                     {
                         botonesContainer.getChildren().addAll(btnEditar, btnCambiar, btnVer);
