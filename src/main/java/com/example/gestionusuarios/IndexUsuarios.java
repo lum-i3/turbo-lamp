@@ -172,9 +172,9 @@ public class IndexUsuarios implements Initializable {
             public TableCell<Usuario, String> call(TableColumn<Usuario, String> param) {
                 return new TableCell<Usuario, String>() {
                     private final HBox botonesContainer = new HBox(5);
-                    private final Button btnEditar = new Button("Editar");
-                    private final Button btnCambiar = new Button("Cambiar estado");
-                    private final Button btnVer = new Button("Ver");
+                    private final Button btnEditar = new Button("[🔁]");
+                    private final Button btnCambiar = new Button("[✏️]");
+                    private final Button btnVer = new Button("[👁️]");
 
                     {
                         botonesContainer.getChildren().addAll(btnEditar, btnCambiar, btnVer);
@@ -215,8 +215,9 @@ public class IndexUsuarios implements Initializable {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
 
-                // Recargar datos después de cerrar la ventana de edición
+                //Recargar datos después de cerrar la ventana de edición
                 recargarDatos();
+                aplicarFiltros();
             } else {
                 mostrarAlerta("Error", "Selecciona un usuario para editar", Alert.AlertType.WARNING);
             }
